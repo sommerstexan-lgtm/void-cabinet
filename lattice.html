@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#03040c" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icon-192.png" />
+  <link rel="stylesheet" href="./common.css" />
+  <title>LATTICE — VOID CABINET</title>
+  <style>
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      width: min(96vw, 480px);
+      border: 2px solid rgba(120,230,255,0.45);
+      user-select: none;
+    }
+    .cell {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(120,230,255,0.12);
+      font-size: 22px;
+      font-weight: 650;
+      cursor: pointer;
+      position: relative;
+    }
+    .cell:nth-child(9n+3), .cell:nth-child(9n+6) { border-right: 2px solid rgba(120,230,255,0.35); }
+    .cell.boxb { border-bottom: 2px solid rgba(120,230,255,0.35); }
+    .cell.given { color: #9fefff; }
+    .cell.sel { background: rgba(0,180,255,0.22); }
+    .cell.same { background: rgba(194,77,255,0.12); }
+    .cell.bad { color: #ff6b8a; }
+    .cell .notes {
+      position: absolute; inset: 2px; display: grid; grid-template-columns: repeat(3, 1fr);
+      font-size: 9px; color: var(--dim); font-weight: 500; pointer-events: none;
+    }
+    #pad { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; max-width: 480px; }
+    #pad button { min-width: 44px; letter-spacing: 0; font-size: 16px; padding: 10px 0; width: 44px; border-radius: 10px; }
+  </style>
+</head>
+<body class="cabinet-bg">
+  <div class="topnav">
+    <a class="back" href="./index.html">CABINET</a>
+    <h1>LATTICE</h1>
+  </div>
+  <div class="panel">
+    <div class="status-row">
+      <span>DIFF <strong id="diffLabel">Easy</strong></span>
+      <span>TIME <strong id="time">0:00</strong></span>
+      <button type="button" id="easy">Easy</button>
+      <button type="button" id="med">Medium</button>
+      <button type="button" id="hard">Hard</button>
+      <button type="button" id="pencil">Pencil off</button>
+      <button type="button" id="hint">Hint</button>
+    </div>
+    <div id="grid"></div>
+    <div id="pad"></div>
+    <p class="msg" id="msg">Arrows move. Number keys fill. <kbd>P</kbd> toggles pencil marks.</p>
+  </div>
+  <script src="./lattice.js"></script>
+  <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(()=>{});</script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#03040c" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icon-192.png" />
+  <link rel="stylesheet" href="./common.css" />
+  <title>SWEEP — VOID CABINET</title>
+  <style>
+    #grid {
+      display: grid;
+      gap: 2px;
+      width: max-content;
+      max-width: 100%;
+      margin: 8px auto 0;
+      user-select: none;
+    }
+    .c {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 4px;
+      background: rgba(20, 32, 56, 0.9);
+      border: 1px solid rgba(120,230,255,0.16);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .c.open { background: rgba(6, 10, 20, 0.9); cursor: default; }
+    .c.flag { color: #ffd24a; }
+    .c.mine { background: #4a1020; color: #ff6b8a; }
+    .c.n1 { color: #6cf0ff; } .c.n2 { color: #7dff9a; } .c.n3 { color: #ff6b8a; }
+    .c.n4 { color: #c24dff; } .c.n5 { color: #ffb347; } .c.n6 { color: #9fefff; }
+    .board-wrap { overflow: auto; padding-bottom: 24px; }
+  </style>
+</head>
+<body class="cabinet-bg">
+  <div class="topnav">
+    <a class="back" href="./index.html">CABINET</a>
+    <h1>SWEEP</h1>
+  </div>
+  <div class="panel">
+    <div class="status-row">
+      <span>MINES <strong id="left">10</strong></span>
+      <span>TIME <strong id="time">0</strong></span>
+      <button type="button" data-mode="beginner">Beginner</button>
+      <button type="button" data-mode="inter">Intermediate</button>
+      <button type="button" data-mode="expert">Expert</button>
+    </div>
+    <p class="msg" id="msg">Left click opens. Right click or <kbd>F</kbd> flags. First click is always safe.</p>
+    <div class="board-wrap"><div id="grid"></div></div>
+  </div>
+  <script src="./sweep.js"></script>
+  <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(()=>{});</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#03040c" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icon-192.png" />
+  <link rel="stylesheet" href="./common.css" />
+  <title>CIPHER — VOID CABINET</title>
+  <style>
+    .wrap { display: grid; grid-template-columns: minmax(280px, 420px) 1fr; gap: 28px; align-items: start; }
+    @media (max-width: 760px) { .wrap { grid-template-columns: 1fr; } }
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      touch-action: none;
+      user-select: none;
+    }
+    .cell {
+      aspect-ratio: 1;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      background: rgba(8, 16, 32, 0.7);
+      cursor: pointer;
+    }
+    .cell.on { background: rgba(0, 180, 255, 0.28); box-shadow: 0 0 16px rgba(0,200,255,0.25); }
+    .cell.used { color: var(--gold); }
+    #current { font-size: 22px; letter-spacing: 0.28em; min-height: 32px; }
+    #found { display: flex; flex-wrap: wrap; gap: 6px; }
+    #found span {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+    }
+  </style>
+</head>
+<body class="cabinet-bg">
+  <div class="topnav">
+    <a class="back" href="./index.html">CABINET</a>
+    <h1>CIPHER</h1>
+  </div>
+  <div class="panel">
+    <div class="status-row">
+      <span>SCORE <strong id="score">0</strong></span>
+      <span>WORDS <strong id="count">0</strong></span>
+      <span>BEST <strong id="best">0</strong></span>
+      <button type="button" id="new">New grid</button>
+    </div>
+    <div class="wrap">
+      <div>
+        <div id="grid"></div>
+        <div id="current"></div>
+        <p class="msg" id="msg">Drag through adjacent letters. 3+ letters. Diagonals count.</p>
+      </div>
+      <div>
+        <div class="status-row"><span>FOUND</span></div>
+        <div id="found"></div>
+      </div>
+    </div>
+  </div>
+  <script src="./words.js"></script>
+  <script src="./cipher.js"></script>
+  <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(()=>{});</script>
+</body>
+</html>

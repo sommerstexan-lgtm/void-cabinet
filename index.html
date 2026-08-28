@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#03040c" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="VOID CABINET" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icon-192.png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="./icon-180.png" />
+  <link rel="stylesheet" href="./common.css" />
+  <title>VOID CABINET</title>
+  <style>
+    .hero { text-align: center; padding: 36px 16px 10px; }
+    .hero .tag { letter-spacing: 0.5em; font-size: 11px; opacity: 0.65; margin-bottom: 12px; }
+    .hero h1 { font-size: clamp(40px, 8vw, 84px); letter-spacing: 0.18em; margin: 0 0 8px; font-weight: 800; }
+    .hero p { max-width: 560px; margin: 0 auto; opacity: 0.75; line-height: 1.6; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      max-width: 980px;
+      margin: 36px auto 20px;
+      padding: 0 18px 48px;
+    }
+    .tile {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px 20px 18px;
+      background: linear-gradient(180deg, rgba(12, 24, 48, 0.65), rgba(8, 8, 20, 0.4));
+      box-shadow: 0 0 28px rgba(0, 180, 255, 0.06);
+      min-height: 168px;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .tile:hover { transform: translateY(-3px); border-color: rgba(108, 240, 255, 0.55); }
+    .tile .kind { font-size: 10px; letter-spacing: 0.32em; opacity: 0.55; margin-bottom: 10px; }
+    .tile h2 { margin: 0 0 8px; letter-spacing: 0.16em; font-size: 22px; }
+    .tile p { margin: 0; opacity: 0.7; font-size: 13px; line-height: 1.5; }
+    .foot {
+      text-align: center;
+      opacity: 0.45;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      padding-bottom: 28px;
+    }
+  </style>
+</head>
+<body class="cabinet-bg">
+  <div class="hero">
+    <div class="tag">FIVE GAMES · ONE INSTALL</div>
+    <h1 class="grad-title">VOID CABINET</h1>
+    <p>Pick a table. All five run offline after the first visit. Built for a Chromebook keyboard and trackpad.</p>
+  </div>
+  <div class="grid">
+    <a class="tile" href="./pilot.html">
+      <div class="kind">ACTION</div>
+      <h2 class="grad-title">VOID PILOT</h2>
+      <p>Neon space combat. Strafe, shoot, survive the waves.</p>
+    </a>
+    <a class="tile" href="./klondike.html">
+      <div class="kind">CARDS</div>
+      <h2 class="grad-title">KLONDIKE</h2>
+      <p>Classic solitaire with undo, draw-1 or draw-3, and a daily deal.</p>
+    </a>
+    <a class="tile" href="./cipher.html">
+      <div class="kind">LETTERS</div>
+      <h2 class="grad-title">CIPHER</h2>
+      <p>Trace words on a 5×5 letter lattice. Longer words pay more.</p>
+    </a>
+    <a class="tile" href="./lattice.html">
+      <div class="kind">NUMBERS</div>
+      <h2 class="grad-title">LATTICE</h2>
+      <p>Sudoku with pencil marks, hints, and keyboard entry.</p>
+    </a>
+    <a class="tile" href="./sweep.html">
+      <div class="kind">LOGIC</div>
+      <h2 class="grad-title">SWEEP</h2>
+      <p>Minesweeper. Clear the field without waking the mines.</p>
+    </a>
+  </div>
+  <div class="foot">CHROME MENU → CAST, SAVE &amp; SHARE → INSTALL VOID CABINET</div>
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
+    }
+  </script>
+</body>
+</html>

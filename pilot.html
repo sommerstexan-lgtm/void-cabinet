@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#03040c" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icon-192.png" />
+  <title>VOID PILOT</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #03040c; font-family: "Segoe UI", system-ui, sans-serif; touch-action: none; user-select: none; }
+    canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
+    #hud { position: fixed; inset: 0; pointer-events: none; color: #c8f7ff; text-shadow: 0 0 8px #00e5ff, 0 0 18px #0077aa; }
+    #topbar { display: flex; justify-content: space-between; align-items: flex-start; padding: 14px 18px; font-variant-numeric: tabular-nums; letter-spacing: 0.12em; font-size: 14px; }
+    #scorebox .label, #livesbox .label { opacity: 0.55; font-size: 10px; letter-spacing: 0.28em; }
+    #scorebox .val { font-size: 22px; font-weight: 700; }
+    #livesbox { text-align: right; margin-right: 88px; }
+    #wave { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); font-size: 12px; letter-spacing: 0.4em; opacity: 0.7; }
+    #overlay { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #e8fbff; background: radial-gradient(ellipse at center, rgba(8,12,40,0.55), rgba(3,4,12,0.88)); pointer-events: auto; }
+    #overlay.hidden { display: none; }
+    #overlay h1 { font-size: clamp(42px, 8vw, 92px); letter-spacing: 0.22em; font-weight: 800; background: linear-gradient(180deg, #fff 10%, #6cf0ff 45%, #c24dff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 18px rgba(0, 220, 255, 0.45)); margin-bottom: 8px; }
+    #overlay .tag { letter-spacing: 0.55em; font-size: 12px; opacity: 0.7; margin-bottom: 28px; }
+    #overlay .hint { max-width: 520px; line-height: 1.7; opacity: 0.8; font-size: 14px; padding: 0 24px; }
+    #overlay .hint kbd { display: inline-block; border: 1px solid rgba(120, 230, 255, 0.35); padding: 1px 7px; border-radius: 4px; font-size: 12px; background: rgba(0, 40, 60, 0.4); }
+    #startBtn, #againBtn { margin-top: 28px; cursor: pointer; border: 1px solid rgba(100, 230, 255, 0.5); background: linear-gradient(180deg, rgba(0, 180, 255, 0.18), rgba(80, 0, 140, 0.18)); color: #e8fbff; letter-spacing: 0.35em; padding: 14px 34px; font-size: 14px; border-radius: 999px; text-transform: uppercase; }
+    #hiscore { margin-top: 18px; opacity: 0.65; letter-spacing: 0.2em; font-size: 13px; }
+    #mute, #back { position: fixed; z-index: 5; pointer-events: auto; background: transparent; border: 1px solid rgba(120,230,255,0.3); color: #9fefff; border-radius: 999px; padding: 6px 10px; cursor: pointer; font-size: 12px; letter-spacing: 0.12em; text-decoration: none; }
+    #mute { top: 12px; right: 16px; }
+    #back { top: 12px; left: 16px; }
+    #installHint { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); font-size: 11px; letter-spacing: 0.18em; opacity: 0.45; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <a id="back" href="./index.html">CABINET</a>
+  <canvas id="c"></canvas>
+  <div id="hud">
+    <div id="topbar">
+      <div id="scorebox"><div class="label">SCORE</div><div class="val" id="scoreVal">0</div></div>
+      <div id="livesbox"><div class="label">HULL</div><div class="val" id="livesVal">■■■</div></div>
+    </div>
+    <div id="wave">WAVE 1</div>
+  </div>
+  <button id="mute" type="button">SND ON</button>
+  <div id="overlay">
+    <div class="tag">CHROMEBOOK COMBAT READY</div>
+    <h1>VOID PILOT</h1>
+    <div class="hint">
+      Fly a neon interceptor through hostile space.<br/>
+      <kbd>A</kbd> <kbd>D</kbd> or arrows to strafe · <kbd>SPACE</kbd> or click to fire
+    </div>
+    <button id="startBtn" type="button">ENGAGE</button>
+    <div id="hiscore"></div>
+    <div id="installHint">Install VOID CABINET from the hub for offline play</div>
+  </div>
+  <script src="./pilot.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(() => {});
+  </script>
+</body>
+</html>
