@@ -26,45 +26,18 @@
     return out;
   }
 
-  function allWords(board) {
-    const hits = new Set();
-    const walk = (i, used, s) => {
-      if (s.length >= 3 && WORDS.has(s)) hits.add(s);
-      if (s.length >= 8) return;
-      for (const n of neighbors(i)) {
-        if (used.has(n)) continue;
-        used.add(n);
-        walk(n, used, s + board[n]);
-        used.delete(n);
-      }
-    };
-    for (let i = 0; i < 25; i++) {
-      const used = new Set([i]);
-      walk(i, used, board[i]);
-    }
-    return hits;
-  }
-
   function makeBoard() {
-    let board, hidden;
-    for (let attempt = 0; attempt < 40; attempt++) {
-      board = Array.from({ length: 25 }, letter);
-      hidden = allWords(board);
-      if (hidden.size >= 12) break;
-    }
-    return { board, hidden };
+    return Array.from({ length: 25 }, letter);
   }
 
   function newGame() {
-    const pack = makeBoard();
-    cells = pack.board;
-    window._hidden = pack.hidden;
+    cells = makeBoard();
     found = new Set();
     score = 0;
     path = [];
     renderGrid();
     update();
-    msgEl.textContent = pack.hidden.size + " words hiding on this grid.";
+    msgEl.textContent = "Click letters that touch. Then Submit word.";
   }
 
   function renderGrid() {
