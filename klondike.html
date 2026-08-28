@@ -46,8 +46,29 @@
       color: transparent;
       border-color: rgba(108,240,255,0.4);
     }
-    .card .r { position: absolute; top: 6px; left: 8px; font-size: 22px; line-height: 1.05; font-weight: 800; }
-    .card .s { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 42px; }
+    .card .r {
+      position: absolute;
+      top: 4px;
+      left: 6px;
+      right: 6px;
+      font-size: 28px;
+      line-height: 1;
+      font-weight: 800;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card .s { display: none; }
+    #peek {
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      min-height: 48px;
+      margin: 0 0 12px;
+      color: #fff;
+      text-shadow: 0 0 12px rgba(0,200,255,0.35);
+    }
+    #peek.red { color: #ff6b8a; }
     .tableau .card { position: absolute; left: 0; right: 0; }
     .waste-wrap, .stock-wrap, .found { position: relative; }
     #toprow { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(7, minmax(96px, 1fr)); gap: 10px; margin-bottom: 4px; }
@@ -93,6 +114,7 @@
       Only a <strong>King</strong> can start an empty column.
       Foundations (four A piles): build <strong>Ace through King of the same suit</strong>.
     </div>
+    <div id="peek">Click a card — its name will show here large.</div>
     <div id="board"></div>
     <p class="msg" id="msg">Click the dark deck to start turning cards.</p>
   </div>

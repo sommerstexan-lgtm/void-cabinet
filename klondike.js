@@ -170,12 +170,35 @@
     }
   }
 
+  function cardLabel(c) {
+    const s = suitOf(c);
+    const names = ["Ace","2","3","4","5","6","7","8","9","10","Jack","Queen","King"];
+    const suits = { S: "Spades", H: "Hearts", D: "Diamonds", C: "Clubs" };
+    return {
+      short: RANKS[c.rank] + " " + s.glyph,
+      long: names[c.rank] + " of " + suits[c.suit],
+      red: s.red
+    };
+  }
+
+  function showPeek(c) {
+    const peek = document.getElementById("peek");
+    if (!peek) return;
+    if (!c || !c.face) {
+      peek.textContent = "Click a face-up card — its name will show here large.";
+      peek.classList.remove("red");
+      return;
+    }
+    const lab = cardLabel(c);
+    peek.textContent = lab.long + "   " + lab.short;
+    peek.classList.toggle("red", lab.red);
+  }
+
   function cardHtml(c, extra = "") {
     const s = suitOf(c);
     if (!c.face) return `<div class="card back" data-id="${c.id}" ${extra}></div>`;
     return `<div class="card ${s.red ? "red" : ""}" data-id="${c.id}" ${extra}>
-      <div class="r">${RANKS[c.rank]}<br>${s.glyph}</div>
-      <div class="s">${s.glyph}</div>
+      <div class="r"><span>${RANKS[c.rank]}</span><span>${s.glyph}</span></div>
     </div>`;
   }
 
@@ -202,9 +225,9 @@
     const tabs = state.tableau.map((pile, i) => {
       const cards = pile.map((c, idx) => {
         const faceDrag = c.face ? `draggable="true" data-from="tab:${i}:${idx}"` : "";
-        return cardHtml(c, `style="top:${idx * 28}px;z-index:${idx}" ${faceDrag} data-idx="${idx}"`);
+        return cardHtml(c, `style="top:${idx * 40}px;z-index:${idx}" ${faceDrag} data-idx="${idx}"`);
       }).join("");
-      return `<div class="pile tableau" data-drop="tab:${i}" style="min-height:${Math.max(148, 110 + pile.length * 28)}px">${cards}</div>`;
+      return `<div class="pile tableau" data-drop="tab:${i}" style="min-height:${Math.max(160, 120 + pile.length * 40)}px">${cards}</div>`;
     }).join("");
 
     boardEl.innerHTML = `<div id="toprow">${stock}${waste}<div></div>${found}</div>${tabs}`;
@@ -235,6 +258,7 @@
         if (ev.detail === 2) return;
         if (dragging) return;
         const pack = stackFrom(el.dataset.from);
+        if (pack.cards[0]) showPeek(pack.cards[0]);
         snapshot();
         if (!tryMove(pack.cards, pack.from)) history.pop();
       });
