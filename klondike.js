@@ -201,11 +201,10 @@
 
     const tabs = state.tableau.map((pile, i) => {
       const cards = pile.map((c, idx) => {
-        const top = idx === pile.length - 1;
         const faceDrag = c.face ? `draggable="true" data-from="tab:${i}:${idx}"` : "";
-        return cardHtml(c, `style="top:${idx * 22}px;z-index:${idx}" ${faceDrag} data-idx="${idx}"`);
+        return cardHtml(c, `style="top:${idx * 28}px;z-index:${idx}" ${faceDrag} data-idx="${idx}"`);
       }).join("");
-      return `<div class="pile tableau" data-drop="tab:${i}" style="min-height:${Math.max(108, 90 + pile.length * 22)}px">${cards}</div>`;
+      return `<div class="pile tableau" data-drop="tab:${i}" style="min-height:${Math.max(148, 110 + pile.length * 28)}px">${cards}</div>`;
     }).join("");
 
     boardEl.innerHTML = `<div id="toprow">${stock}${waste}<div></div>${found}</div>${tabs}`;

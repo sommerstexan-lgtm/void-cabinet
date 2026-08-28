@@ -73,32 +73,47 @@
 
   // ---------- input ----------
   const keys = Object.create(null);
-  let pointerX = null;
-  let pointerDown = false;
+  let dragX = null;
+  let dragging = false;
+  let dragMoved = false;
   let wantShoot = false;
+  let fireHeld = false;
+  let startGrace = 0;
 
   window.addEventListener("keydown", (e) => {
     keys[e.code] = true;
     if (["Space", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.code)) e.preventDefault();
-    if (e.code === "Space") wantShoot = true;
+    if (e.code === "Space") { wantShoot = true; fireHeld = true; }
     if (state === "menu" && (e.code === "Space" || e.code === "Enter")) startGame();
     if (state === "dead" && (e.code === "Space" || e.code === "Enter")) startGame();
   });
-  window.addEventListener("keyup", (e) => { keys[e.code] = false; });
+  window.addEventListener("keyup", (e) => {
+    keys[e.code] = false;
+    if (e.code === "Space") fireHeld = false;
+  });
 
-  function setPointer(clientX) {
-    pointerX = clientX;
-  }
   canvas.addEventListener("pointerdown", (e) => {
-    pointerDown = true;
-    wantShoot = true;
-    setPointer(e.clientX);
+    if (state !== "play") return;
+    dragging = true;
+    dragMoved = false;
+    dragX = e.clientX;
     canvas.setPointerCapture(e.pointerId);
   });
   canvas.addEventListener("pointermove", (e) => {
-    if (pointerDown || e.pointerType === "mouse") setPointer(e.clientX);
+    if (!dragging) return;
+    if (Math.abs(e.clientX - dragX) > 8) dragMoved = true;
+    dragX = e.clientX;
   });
-  window.addEventListener("pointerup", () => { pointerDown = false; });
+  window.addEventListener("pointerup", (e) => {
+    if (dragging && !dragMoved && state === "play") wantShoot = true;
+    dragging = false;
+    dragMoved = false;
+  });
+  window.addEventListener("blur", () => {
+    dragging = false;
+    fireHeld = false;
+    Object.keys(keys).forEach((k) => { keys[k] = false; });
+  });
 
   // ---------- entities ----------
   const stars = [];
@@ -145,7 +160,8 @@
     player.lives = 3;
     player.cool = 0;
     player.weapon = 1;
-    player.invuln = 1.2;
+    player.invuln = 2.2;
+    startGrace = 2.2;
     player.shield = 0;
     player.engine = 0;
   }
@@ -256,8 +272,8 @@
       return;
     }
     player.lives -= 1;
-    player.invuln = 1.6;
-    shake = 14;
+    player.invuln = 2.0;
+    shake = 6;
     burst(player.x, player.y, "#ff4d6d", 28, 300);
     noiseBurst(0.22, 0.1);
     updateHud();
@@ -428,36 +444,37 @@
       beep(780, 0.18, "triangle", 0.05);
     }
 
-    // player move
+    startGrace = Math.max(0, startGrace - dt);
+
+    // player move — keyboard, or drag only (never chase a hovering cursor)
     let ax = 0;
     if (keys.ArrowLeft || keys.KeyA) ax -= 1;
     if (keys.ArrowRight || keys.KeyD) ax += 1;
-    if (pointerX != null && (pointerDown || !ax)) {
-      const target = pointerX;
-      const diff = target - player.x;
-      ax = Math.max(-1, Math.min(1, diff / 90));
-      if (Math.abs(diff) < 6) player.x = target;
+    if (dragging && dragX != null && !ax) {
+      const diff = dragX - player.x;
+      ax = Math.max(-1, Math.min(1, diff / 70));
+      player.vx = diff * 8;
     }
-    player.vx += ax * 2400 * dt;
-    player.vx *= Math.pow(0.0018, dt);
+    player.vx += ax * 2200 * dt;
+    player.vx *= Math.pow(0.004, dt);
     player.x += player.vx * dt;
-    player.x = Math.max(22, Math.min(W - 22, player.x));
+    player.x = Math.max(28, Math.min(W - 28, player.x));
     player.y = H - 78;
-    player.engine = Math.min(1, Math.abs(ax) + (keys.ArrowUp || keys.KeyW ? 1 : 0));
+    player.engine = Math.min(1, Math.abs(ax));
     player.cool = Math.max(0, player.cool - dt);
     player.invuln = Math.max(0, player.invuln - dt);
     player.shield = Math.max(0, player.shield - dt);
 
-    if (keys.Space || pointerDown || wantShoot) firePlayer();
+    if (keys.Space || fireHeld || wantShoot) firePlayer();
     wantShoot = false;
 
-    // spawn
+    // spawn — gentle start, no piles on the ship
     spawnAcc += dt;
-    const rate = Math.max(0.28, 1.15 - wave * 0.08);
-    if (spawnAcc > rate) {
+    const rate = Math.max(0.55, 1.6 - wave * 0.08);
+    if (startGrace <= 0 && spawnAcc > rate) {
       spawnAcc = 0;
       spawnEnemy();
-      if (wave > 4 && Math.random() < 0.25) spawnEnemy();
+      if (wave > 5 && Math.random() < 0.18) spawnEnemy();
     }
 
     // bullets
@@ -472,7 +489,7 @@
       b.x += b.vx * dt;
       b.y += b.vy * dt;
       if (b.y > H + 20 || b.x < -20 || b.x > W + 20) eBullets.splice(i, 1);
-      else if (circleHit(b.x, b.y, 3, player.x, player.y, 14)) {
+      else if (circleHit(b.x, b.y, 3, player.x, player.y, 10)) {
         eBullets.splice(i, 1);
         hitPlayer();
       }
@@ -499,7 +516,7 @@
       }
 
       // collide player
-      if (rectHit(e.x, e.y, e.w * 0.8, e.h * 0.8, player.x, player.y, 22, 28)) {
+      if (rectHit(e.x, e.y, e.w * 0.55, e.h * 0.55, player.x, player.y, 16, 20)) {
         enemies.splice(i, 1);
         burst(e.x, e.y, e.color, 16, 200);
         hitPlayer();
@@ -642,7 +659,7 @@
   }
 
   function frame(now) {
-    const dt = Math.min(0.033, (now - last) / 1000);
+    const dt = Math.min(0.025, (now - last) / 1000);
     last = now;
     update(dt);
     draw();

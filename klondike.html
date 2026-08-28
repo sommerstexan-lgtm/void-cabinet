@@ -12,13 +12,13 @@
     body { overflow-x: hidden; }
     #board {
       display: grid;
-      grid-template-columns: repeat(7, minmax(72px, 1fr));
+      grid-template-columns: repeat(7, minmax(96px, 1fr));
       gap: 10px;
-      max-width: 980px;
+      max-width: 1100px;
       margin: 0 auto;
     }
     .pile {
-      min-height: 108px;
+      min-height: 148px;
       border: 1px dashed rgba(120,230,255,0.18);
       border-radius: 10px;
       position: relative;
@@ -27,7 +27,7 @@
     .card {
       width: 100%;
       aspect-ratio: 2.4 / 3.4;
-      max-height: 148px;
+      max-height: 210px;
       border-radius: 8px;
       border: 1px solid rgba(180,220,255,0.25);
       background: #f4f7ff;
@@ -46,12 +46,23 @@
       color: transparent;
       border-color: rgba(108,240,255,0.4);
     }
-    .card .r { position: absolute; top: 6px; left: 7px; font-size: 13px; line-height: 1.1; }
-    .card .s { position: absolute; bottom: 6px; right: 7px; font-size: 16px; }
+    .card .r { position: absolute; top: 6px; left: 8px; font-size: 22px; line-height: 1.05; font-weight: 800; }
+    .card .s { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 42px; }
     .tableau .card { position: absolute; left: 0; right: 0; }
     .waste-wrap, .stock-wrap, .found { position: relative; }
-    #toprow { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(7, minmax(72px, 1fr)); gap: 10px; margin-bottom: 4px; }
-    .empty-hint { opacity: 0.28; font-size: 22px; display: flex; align-items: center; justify-content: center; height: 100px; }
+    #toprow { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(7, minmax(96px, 1fr)); gap: 10px; margin-bottom: 4px; }
+    .empty-hint { opacity: 0.28; font-size: 22px; display: flex; align-items: center; justify-content: center; height: 130px; }
+    .howto {
+      margin: 0 0 14px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--dim);
+      line-height: 1.55;
+      font-size: 14px;
+      max-width: 1100px;
+    }
+    .howto strong { color: var(--text); }
     #tools { display: flex; flex-wrap: wrap; gap: 8px; }
   </style>
 </head>
@@ -73,8 +84,17 @@
         <button type="button" id="drawMode">Draw 3</button>
       </div>
     </div>
+    <div class="howto">
+      <strong>How to play.</strong>
+      Click the deck (dark stack, top left) to turn cards.
+      Click a card, then click where it should go — or drag it.
+      Double-click a card to send it to a foundation if it fits.<br/>
+      Columns: stack cards <strong>high to low</strong>, <strong>red on black</strong> or black on red.
+      Only a <strong>King</strong> can start an empty column.
+      Foundations (four A piles): build <strong>Ace through King of the same suit</strong>.
+    </div>
     <div id="board"></div>
-    <p class="msg" id="msg">Build A→K by suit in the foundations. Tableau stacks descend and alternate color.</p>
+    <p class="msg" id="msg">Click the dark deck to start turning cards.</p>
   </div>
   <script src="./klondike.js"></script>
   <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(()=>{});</script>

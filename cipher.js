@@ -122,24 +122,44 @@
     return +el.dataset.i;
   }
 
-  gridEl.addEventListener("pointerdown", (ev) => {
-    ev.preventDefault();
-    gridEl.setPointerCapture(ev.pointerId);
-    dragging = true;
-    path = [];
-    const i = indexFromEvent(ev);
-    if (i != null) addCell(i);
+  gridEl.addEventListener("click", (ev) => {
+    const cell = ev.target.closest(".cell");
+    if (!cell) return;
+    const i = +cell.dataset.i;
+    if (path.includes(i)) {
+      if (path[path.length - 1] === i) path.pop();
+      else msgEl.textContent = "Use Back to remove letters.";
+      paint();
+      curEl.textContent = wordOf(path).toUpperCase();
+      return;
+    }
+    if (!path.length || neighbors(path[path.length - 1]).includes(i)) {
+      path.push(i);
+      msgEl.textContent = wordOf(path).toUpperCase() || "Click the next touching letter.";
+    } else {
+      msgEl.textContent = "That letter does not touch the last one. Clear or Back.";
+    }
     paint();
+    curEl.textContent = wordOf(path).toUpperCase();
   });
-  gridEl.addEventListener("pointermove", (ev) => {
-    if (!dragging) return;
-    const i = indexFromEvent(ev);
-    if (i != null) { addCell(i); paint(); }
-  });
-  window.addEventListener("pointerup", () => {
-    if (!dragging) return;
-    dragging = false;
+
+  document.getElementById("submit").addEventListener("click", () => {
+    if (path.length < 3) {
+      msgEl.textContent = "Need at least 3 letters, then Submit.";
+      return;
+    }
     commit();
+  });
+  document.getElementById("back").addEventListener("click", () => {
+    path.pop();
+    paint();
+    curEl.textContent = wordOf(path).toUpperCase();
+  });
+  document.getElementById("clear").addEventListener("click", () => {
+    path = [];
+    paint();
+    curEl.textContent = "";
+    msgEl.textContent = "Cleared. Click a starting letter.";
   });
 
   document.getElementById("new").addEventListener("click", newGame);

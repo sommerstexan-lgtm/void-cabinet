@@ -1,4 +1,4 @@
-const CACHE = "void-cabinet-v2";
+const CACHE = "void-cabinet-v4";
 const ASSETS = [
   "./",
   "./index.html",

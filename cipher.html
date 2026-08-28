@@ -15,7 +15,7 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 8px;
-      touch-action: none;
+      touch-action: manipulation;
       user-select: none;
     }
     .cell {
@@ -60,7 +60,12 @@
       <div>
         <div id="grid"></div>
         <div id="current"></div>
-        <p class="msg" id="msg">Drag through adjacent letters. 3+ letters. Diagonals count.</p>
+        <div class="status-row" style="margin-top:10px">
+          <button type="button" id="submit">Submit word</button>
+          <button type="button" id="back">Back</button>
+          <button type="button" id="clear">Clear</button>
+        </div>
+        <p class="msg" id="msg">Click letters one at a time (they must touch, including corners). Then click Submit. No need to hold the trackpad down.</p>
       </div>
       <div>
         <div class="status-row"><span>FOUND</span></div>
